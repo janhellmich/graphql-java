@@ -2,6 +2,7 @@ package graphql.schema;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class GraphQLFieldDefinition {
     private final DataFetcher dataFetcher;
     private final String deprecationReason;
     private final List<GraphQLArgument> arguments = new ArrayList<GraphQLArgument>();
+    private HashMap<String, Object> metaData = new HashMap<String, Object>();
 
 
     public GraphQLFieldDefinition(String name, String description, GraphQLOutputType type, DataFetcher dataFetcher, List<GraphQLArgument> arguments, String deprecationReason) {
@@ -39,6 +41,13 @@ public class GraphQLFieldDefinition {
         return name;
     }
 
+    public HashMap<String, Object> getMetaData() {
+        return this.metaData;
+    }
+
+    public void setMetaData(HashMap<String, Object> metaData) {
+        this.metaData = metaData;
+    }
 
     public GraphQLOutputType getType() {
         return type;
@@ -84,6 +93,7 @@ public class GraphQLFieldDefinition {
         private List<GraphQLArgument> arguments = new ArrayList<GraphQLArgument>();
         private String deprecationReason;
         private boolean isField;
+        private HashMap<String, Object> metaData = new HashMap<String, Object>();
 
 
         public Builder name(String name) {
@@ -93,6 +103,11 @@ public class GraphQLFieldDefinition {
 
         public Builder description(String description) {
             this.description = description;
+            return this;
+        }
+
+        public Builder metaData(String key, Object value) {
+            this.metaData.put(key, value);
             return this;
         }
 
@@ -191,9 +206,10 @@ public class GraphQLFieldDefinition {
                     dataFetcher = new PropertyDataFetcher(name);
                 }
             }
-            return new GraphQLFieldDefinition(name, description, type, dataFetcher, arguments, deprecationReason);
+            GraphQLFieldDefinition fd = new GraphQLFieldDefinition(name, description, type, dataFetcher, arguments, deprecationReason);
+            fd.setMetaData(metaData);
+            return fd;
         }
-
 
     }
 }
