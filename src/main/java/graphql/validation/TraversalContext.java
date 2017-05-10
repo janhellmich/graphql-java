@@ -181,6 +181,9 @@ public class TraversalContext implements QueryLanguageVisitor {
         outputTypeStack.add(type);
     }
 
+    public List<GraphQLFieldDefinition> getFieldDefStack() {
+        return fieldDefStack;
+    }
 
     private <T> T lastElement(List<T> list) {
         if (list.size() == 0) return null;
